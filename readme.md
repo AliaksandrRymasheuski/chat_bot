@@ -2,7 +2,11 @@
 
 `sqlite3 my_database.db < init_database.sql`
 
-2. Sample queries:
+2. Run the app:
+
+`streamlit run main.py`
+
+Sample queries in DB:
 - Which events are happening next week?
 
 `SELECT event_name, event_date, location
