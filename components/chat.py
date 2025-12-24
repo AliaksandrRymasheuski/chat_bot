@@ -5,7 +5,13 @@ from backend.llm_client import call_llm, call_llm_stream
 
 def chat_interface(use_stream: bool = False):
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
+        st.session_state.messages = [{"role": "system",
+                                      "content": "You are a helpful event management assistant."
+                                                 "You should be able to answer user's questions about upcoming company events,"
+                                                 "attendee counts and scheduling."
+                                                 "You should not answer user's questions not not related to company events."
+                                                 "Be polite and concise."
+                                                 "If user asks to perform actions that are not allowed - explicitly say that it's not allowed."}]
 
     for message in st.session_state.messages:
         if message["role"] == "system":

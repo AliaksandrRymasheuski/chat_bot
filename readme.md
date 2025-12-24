@@ -1,6 +1,6 @@
 1. Create and initialize DB:
 
-`sqlite3 my_database.db < init_database.sql`
+`sqlite3 resources/my_database.db < scripts/init_database.sql`
 
 2. Run the app:
 

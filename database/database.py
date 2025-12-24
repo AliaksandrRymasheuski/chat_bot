@@ -9,7 +9,7 @@ def execute_query(query):
     """
     try:
         # Connect to SQLite database
-        connection = sqlite3.connect("../my_database.db")
+        connection = sqlite3.connect("../resources/my_database.db")
         cursor = connection.cursor()
 
         # Execute the query

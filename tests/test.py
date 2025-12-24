@@ -1,4 +1,4 @@
-from backend.database import execute_query
+from database.database import execute_query
 
 query1 = """
 SELECT event_name, event_date, location
