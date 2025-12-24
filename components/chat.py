@@ -51,17 +51,22 @@ def chat_interface():
     if "queries_history" not in st.session_state:
         st.session_state.queries_history = []
 
-    for idx, message in enumerate(st.session_state.messages):
+    # Display chat history (skip system message)
+    assistant_msg_idx = 0
+    for message in st.session_state.messages:
         if message["role"] == "system":
             continue
+
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
             # Show queries for assistant messages
-            if message["role"] == "assistant" and idx < len(st.session_state.queries_history):
-                queries = st.session_state.queries_history[idx]
-                if queries:
-                    display_queries(queries)
+            if message["role"] == "assistant":
+                if assistant_msg_idx < len(st.session_state.queries_history):
+                    queries = st.session_state.queries_history[assistant_msg_idx]
+                    if queries:
+                        display_queries(queries)
+                assistant_msg_idx += 1
 
     prompt = st.chat_input("Ask me about company events...")
     if prompt:
