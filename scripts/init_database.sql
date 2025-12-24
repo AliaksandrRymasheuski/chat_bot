@@ -69,8 +69,16 @@ INSERT INTO event_rsvp (event_id, attendee_id, status) VALUES
     (4, 6, 'yes'),
     (4, 7, 'maybe'),
 
-    -- RSVPs for Product Launch
+    -- RSVPs for All-Hands meeting
     (5, 1, 'yes'),
     (5, 3, 'yes'),
     (5, 5, 'yes'),
-    (5, 8, 'no');
+    (5, 8, 'no'),
+
+    -- RSVPs for Product Launch
+    (6, 1, 'yes'),
+    (6, 2, 'yes'),
+    (6, 3, 'yes'),
+    (6, 4, 'yes'),
+    (6, 5, 'maybe'),
+    (6, 6, 'no');

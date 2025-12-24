@@ -8,6 +8,7 @@ def execute_query(query):
         :return: Results of the query as a list of rows for SELECT statements
     """
     try:
+        print("Executing query:", query)
         # Connect to SQLite database
         connection = sqlite3.connect("resources/my_database.db")
         cursor = connection.cursor()

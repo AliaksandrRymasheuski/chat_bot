@@ -87,15 +87,3 @@ def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5):
             return assistant_message.content or ""
 
     return "Maximum iterations reached. Please try rephrasing your question."
-
-
-
-def call_llm_stream(messages: list[dict]):
-    llm_client = get_llm_client()
-    return llm_client.chat.completions.create(
-        model=DEPLOYMENT_MODEL,
-        messages=messages,
-        stream=True,
-        tools=get_tools(),
-        tool_choice="auto"
-    )

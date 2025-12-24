@@ -1,6 +1,6 @@
 import streamlit as st
 
-from backend.llm_client import call_llm, call_llm_stream
+from backend.llm_client import call_llm
 
 SYSTEM_PROMPT = """You are a helpful event management assistant that answers questions about company events.
 
@@ -16,7 +16,7 @@ Your limitations:
 
 If a user asks something outside your scope, politely explain that you can only help with company events information."""
 
-def chat_interface(use_stream: bool = False):
+def chat_interface():
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "system",
                                       "content": SYSTEM_PROMPT}]
@@ -37,13 +37,9 @@ def chat_interface(use_stream: bool = False):
 
         with st.chat_message("assistant"):
             try:
-                if use_stream:
-                    assistant_replied = call_llm_stream(st.session_state.messages)
-                    response = st.write_stream(assistant_replied)
-                else:
-                    with st.spinner("Thinking..."):
-                        response = call_llm(st.session_state.messages)
-                    st.markdown(response)
+                with st.spinner("Thinking..."):
+                    response = call_llm(st.session_state.messages)
+                st.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
