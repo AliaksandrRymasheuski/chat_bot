@@ -17,7 +17,7 @@ def get_llm_client():
         )
     return client
 
-def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5):
+def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5) -> tuple[str, List[Dict[str, Any]]]:
     """
     Send messages and handle function calling automatically.
     Works with external conversation history (like Streamlit session state).
@@ -27,13 +27,14 @@ def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5):
         max_iterations: Maximum number of function call iterations
 
     Returns:
-        The assistant's final response as a string
+        Tuple of (assistant's response, list of executed queries)
     """
     llm_client = get_llm_client()
 
     # Create a working copy of messages for function calling
     working_messages = messages.copy()
     iteration = 0
+    executed_queries = []
 
     while iteration < max_iterations:
         iteration += 1
@@ -69,8 +70,24 @@ def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5):
                 function_name = tool_call.function.name
                 arguments = json.loads(tool_call.function.arguments)
 
+                query_info = {
+                    "function": function_name,
+                    "query": arguments.get('query', 'N/A'),
+                    "explanation": arguments.get('explanation', 'N/A')
+                }
+                print(f"Function Call: {function_name}")
+                print(f"Query: {arguments.get('query', 'N/A')}")
+
                 # Execute the function
                 function_response = execute_function_call(function_name, arguments)
+
+                # Add result to query info
+                response_data = json.loads(function_response)
+                query_info["success"] = response_data.get("success", False)
+                query_info["row_count"] = response_data.get("row_count", 0)
+                query_info["error"] = response_data.get("error")
+
+                executed_queries.append(query_info)
 
                 # Add function response to working messages
                 working_messages.append({
@@ -84,6 +101,6 @@ def call_llm(messages: List[Dict[str, Any]], max_iterations: int = 5):
             continue
         else:
             # No function call, return the response
-            return assistant_message.content or ""
+            return assistant_message.content or "", executed_queries
 
-    return "Maximum iterations reached. Please try rephrasing your question."
+    return "Maximum iterations reached. Please try rephrasing your question.", executed_queries
