@@ -28,7 +28,7 @@ def chat_interface(use_stream: bool = False):
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    prompt = st.chat_input("How can I help you?")
+    prompt = st.chat_input("Ask me about company events...")
     if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
 
@@ -41,9 +41,13 @@ def chat_interface(use_stream: bool = False):
                     assistant_replied = call_llm_stream(st.session_state.messages)
                     response = st.write_stream(assistant_replied)
                 else:
-                    response = call_llm(st.session_state.messages)
+                    with st.spinner("Thinking..."):
+                        response = call_llm(st.session_state.messages)
                     st.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
+                # Remove the user message if there was an error
+                if st.session_state.messages[-1]["role"] == "user":
+                    st.session_state.messages.pop()
 

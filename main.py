@@ -4,9 +4,17 @@ from components.chat import chat_interface
 
 
 def main():
-    st.title("Graduate project chat")
+    st.title("Event Management Assistant")
+    st.markdown("Ask me anything about company events!")
 
-    chat_interface(use_stream=True)
+    with st.sidebar:
+        st.header("Settings")
+
+        # Streaming toggle
+        use_streaming = st.toggle("Enable Streaming", value=True,
+                                  help="Stream responses word by word")
+
+    chat_interface(use_stream=use_streaming)
 
 
 if __name__ == "__main__":

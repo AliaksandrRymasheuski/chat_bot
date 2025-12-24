@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
+import json
 
+from typing import List, Dict, Any
 from database.database import execute_query
 from database.schema import get_schema_context
 
@@ -83,3 +84,24 @@ def execute_sql_query(query: str, explanation: str) -> Dict[str, Any]:
 def get_tools() -> List[Dict]:
     """Return list of available tools for function calling."""
     return [SQL_QUERY_TOOL]
+
+
+def execute_function_call(function_name: str, arguments: Dict[str, Any]) -> str:
+    """
+    Execute a function call based on the function name and arguments.
+
+    Args:
+        function_name: Name of the function to call
+        arguments: Dictionary of arguments for the function
+
+    Returns:
+        JSON string with function results
+    """
+    if function_name == "execute_sql_query":
+        result = execute_sql_query(
+            query=arguments.get("query", ""),
+            explanation=arguments.get("explanation", "")
+        )
+        return json.dumps(result, indent=2, default=str)
+    else:
+        return json.dumps({"error": f"Unknown function: {function_name}"})
