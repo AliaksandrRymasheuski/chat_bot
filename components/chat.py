@@ -2,16 +2,25 @@ import streamlit as st
 
 from backend.llm_client import call_llm, call_llm_stream
 
+SYSTEM_PROMPT = """You are a helpful event management assistant that answers questions about company events.
+
+Your responsibilities:
+- Answer questions about upcoming company events, attendee counts, and scheduling
+- Provide information from the events database when available
+- Be polite, concise, and professional
+
+Your limitations:
+- Only answer questions related to company events
+- Politely decline requests unrelated to events
+- Do not perform unauthorized database operations (only SELECT queries are allowed)
+
+If a user asks something outside your scope, politely explain that you can only help with company events information."""
 
 def chat_interface(use_stream: bool = False):
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "system",
-                                      "content": "You are a helpful event management assistant."
-                                                 "You should be able to answer user's questions about upcoming company events,"
-                                                 "attendee counts and scheduling."
-                                                 "You should not answer user's questions not not related to company events."
-                                                 "Be polite and concise."
-                                                 "If user asks to perform actions that are not allowed - explicitly say that it's not allowed."}]
+                                      "content": SYSTEM_PROMPT}]
+
 
     for message in st.session_state.messages:
         if message["role"] == "system":
